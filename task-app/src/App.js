@@ -13,6 +13,7 @@ export default class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
   handleChange(e) {
@@ -21,7 +22,15 @@ export default class App extends Component {
         text: e.target.value,
         id: this.state.task.id,
       },
-      taskArr: this.state.taskArr,
+    })
+  }
+
+  deleteTask(id) {
+    console.log(this.state)
+    this.setState({
+      taskArr: this.state.taskArr.filter(task => {
+        return task.id !== id
+      })
     })
   }
 
@@ -54,7 +63,7 @@ export default class App extends Component {
           </label>
           <button onClick={(e)=>{this.handleSubmit(e)}}>Submit</button>
         </form>
-        <Overview taskArr={this.state.taskArr} />
+        <Overview taskArr={this.state.taskArr} handleDelete={this.deleteTask} />
       </div>
     )
   }
