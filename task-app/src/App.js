@@ -1,46 +1,61 @@
-import React, { Component } from 'react';
-import { List } from './components/Overview';
+import React, { Component } from 'react'
+import Overview from './components/Overview'
+import uniqid from "uniqid";
 
-let nextId = 0;
+export default class App extends Component {
+  constructor() {
+    super();
 
-class App extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {value: '', arr: []};
+    this.state = {
+      task: {text: "", id: uniqid()},
+      taskArr: [],
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleChange(e) {
+    this.setState({
+      task: {
+        text: e.target.value,
+        id: this.state.task.id,
+      },
+      taskArr: this.state.taskArr,
+    })
   }
-  
-  handleSubmit(event) {
-    event.preventDefault();
-    const prevArr = this.state.arr;
-    const newArr = prevArr.concat({
-      id: nextId++,
-      task: this.state.value
-    });
-    this.setState({arr: newArr});
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.setState({
+      taskArr: this.state.taskArr.concat(this.state.task),
+      task: {
+        text: "",
+        id: uniqid(),
+      },
+    })
   }
 
   render() {
-    return (
+
+    return(
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Task:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
+        <form>
+          <label htmlFor="task">
+            Enter new task: <input 
+              name="task"
+              type="text"
+              placeholder="Enter task here"
+              onChange={(e)=>{
+                this.handleChange(e)
+              }}
+              value={this.state.task.text}
+            />
           </label>
-          <input type="submit" value="Submit" />
+          <button onClick={(e)=>{this.handleSubmit(e)}}>Submit</button>
         </form>
-        <List arr={this.state.arr}/>
+        <Overview taskArr={this.state.taskArr} />
       </div>
-    );
+    )
   }
 }
-
-export default App;
